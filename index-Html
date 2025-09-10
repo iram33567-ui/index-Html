@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iram's Quotes App</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body, html {
+    margin:0;
+    padding:0;
+    font-family: 'Poppins', sans-serif;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+    text-align:center;
+    color:#fff;
+}
+.container {
+    background: rgba(0,0,0,0.3);
+    padding:25px 20px;
+    border-radius:25px;
+    max-width:90%;
+}
+h1 {
+    font-size:18px;
+    line-height:1.5em;
+    margin:10px 0 5px 0;
+}
+#author {
+    font-size:14px;
+    color:#ffd700;
+    margin-bottom:15px;
+}
+.tabs {
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:15px;
+}
+.tab {
+    padding:8px 15px;
+    border-radius:12px;
+    background:#ff4081;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.3s;
+}
+.tab.active {
+    background:#e91e63;
+}
+.tab:hover {
+    background:#e91e63;
+}
+.buttons {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-bottom:10px;
+}
+button {
+    padding:10px 20px;
+    border:none;
+    border-radius:12px;
+    background:#ff4081;
+    color:#fff;
+    cursor:pointer;
+    transition:0.3s;
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+button:hover {
+    background:#e91e63;
+}
+#developer {
+    font-size:12px;
+    color:#ffd700;
+    font-weight:600;
+    margin-top:10px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="tabs">
+        <div class="tab active" onclick="changeCategory('roman')">Roman Urdu 🇵🇰</div>
+        <div class="tab" onclick="changeCategory('urdu')">Urdu 📝</div>
+        <div class="tab" onclick="changeCategory('english')">English 🌟</div>
+    </div>
+    <h1 id="quote">Loading Quotes...</h1>
+    <div id="author">-</div>
+    <div class="buttons">
+        <button onclick="prevQuote()">⬅️ Previous</button>
+        <button onclick="nextQuote()">Next ➡️</button>
+        <button onclick="addFavourite()">💖 Favourite</button>
+        <button onclick="shareQuote()">📤 Share</button>
+    </div>
+    <div id="developer">Developer By: IRAM SHAHZADI</div>
+</div>
+
+<script>
+const quotes = {
+    roman:[
+        {text:"Aaj ka din sirf tumhari muskaan ka hai 😎", author:"- Iram"},
+        {text:"Dil se kaam karo, phir duniya khud impress ho jaayegi 💥", author:"- Iram"},
+        {text:"Har choti jeet ka celebration zaroori hai 🎉", author:"- Iram"},
+        {text:"Koshish karne walon ki kabhi haar nahi hoti 💪", author:"- Iram"},
+        {text:"Positive socho, positive raho 🌈", author:"- Iram"}
+    ],
+    urdu:[
+        {text:"زندگی کا اصل حسن چھوٹی خوشیوں میں ہے 🌿", author:"- Iram"},
+        {text:"خواب دیکھو اور انہیں حقیقت بناؤ ✨", author:"- Iram"},
+        {text:"ہر دن ایک نئی امید لاتا ہے 🌅", author:"- Iram"},
+        {text:"محبت دل سے دل تک پہنچتی ہے ❤️", author:"- Iram"},
+        {text:"خوش رہنا ایک فن ہے، اسے اپناؤ 😊", author:"- Iram"}
+    ],
+    english:[
+        {text:"Believe in yourself! Every step counts 💪", author:"- Iram"},
+        {text:"Happiness is found in little things 🌟", author:"- Iram"},
+        {text:"Success comes to those who persist 🏆", author:"- Iram"},
+        {text:"Love and kindness make life beautiful 💖", author:"- Iram"},
+        {text:"Dream big, act bigger 🌈", author:"- Iram"}
+    ]
+};
+
+let currentCategory = 'roman';
+let index = 0;
+
+const quoteEl = document.getElementById("quote");
+const authorEl = document.getElementById("author");
+const tabs = document.querySelectorAll('.tab');
+
+function showQuote() {
+    const q = quotes[currentCategory][index];
+    quoteEl.innerText = q.text;
+    authorEl.innerText = q.author;
+}
+
+function nextQuote() {
+    index = (index + 1) % quotes[currentCategory].length;
+    showQuote();
+}
+
+function prevQuote() {
+    index = (index - 1 + quotes[currentCategory].length) % quotes[currentCategory].length;
+    showQuote();
+}
+
+function addFavourite() {
+    alert("💖 Added to favourites:\n" + quotes[currentCategory][index].text);
+}
+
+function shareQuote() {
+    const text = quotes[currentCategory][index].text + " " + quotes[currentCategory][index].author;
+    if (navigator.share) {
+        navigator.share({
+            title: "Quote",
+            text: text
+        }).catch((error) => console.log('Error sharing:', error));
+    } else {
+        // fallback copy to clipboard
+        navigator.clipboard.writeText(text).then(() => {
+            alert("📤 Quote copied to clipboard!");
+        });
+    }
+}
+
+function changeCategory(category) {
+    currentCategory = category;
+    index = 0;
+    tabs.forEach(tab => tab.classList.remove('active'));
+    document.querySelector(`.tab[onclick="changeCategory('${category}')"]`).classList.add('active');
+    showQuote();
+}
+
+// Initial display
+showQuote();
+</script>
+</body>
+</html>
